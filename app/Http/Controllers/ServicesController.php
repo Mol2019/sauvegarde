@@ -34,7 +34,7 @@ class ServicesController extends Controller
       endif;
 
       Service::create($request->all());
-      self::buildServiceDir($request->name);
+      //self::buildServiceDir($request->name);
 
       return response()->json(["success" => "Service ajouté avec succès"]);
     }
