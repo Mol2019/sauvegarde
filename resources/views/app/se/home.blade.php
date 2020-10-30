@@ -260,11 +260,20 @@
 
                     for(var i=0;i<path.length;i++){
                         for(var j=0;j<demo.length;j++){
-                            if(demo[j].name === path[i]){
+														if(demo[j].name.includes("/")){
+															if(demo[j].path === path[i]+"/"+path[i+1]){
+	                                flag = 1;
+	                                demo = demo[j].items;
+	                                break;
+	                            }
+														}
+														console.log(path[i])
+														if(demo[j].name === path[i]){
                                 flag = 1;
                                 demo = demo[j].items;
                                 break;
                             }
+
                         }
                     }
 
