@@ -1,0 +1,109 @@
+@extends('tontine.layouts.base',["title" => "Gestion des bonus"])
+
+@section('app-content')
+<div class="data-table-area mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sparkline13-list shadow-reset">
+                    <div class="sparkline13-hd">
+                        <div class="main-sparkline13-hd">
+                            <h1>Nos bonus</h1>
+                             
+                            <div class="sparkline13-outline-icon">
+                                <span style="cursor:pointer;" data-toggle="modal" data-target="#form">
+                                     Total : {{$data->total}}
+                                </span>
+                                <span style="cursor:pointer;" data-toggle="modal" data-target="#form">
+                                    Perçu : {{$data->totalReceive}}
+                                </span>
+                                <span style="cursor:pointer;" data-toggle="modal" data-target="#form">
+                                    Restant : {{$data->totalReste}}
+                                </span>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="sparkline13-graph">
+                        <div class="datatable-dashv1-list custom-datatable-overright">
+
+                            <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="false" data-click-to-select="true" data-toolbar="#toolbar">
+                                 <thead>
+                                    <tr>
+                                        <th data-field="email" data-editable="false">Utilisateur</th>
+                                        <th data-field="lien" data-editable="false">Montant</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach($data as $gain)
+                                            <tr>
+                                                <td>{{ "+".$gain->don->user->residence->indicatif ." ".$gain->don->user->contact1 }}</td>
+                                                <td>{{ $gain->montant }}</td>
+                                                <td>
+                                                    @if(!$gain->is_rec)
+                                                        <button id="{{ $gain->id }}" class="btn btn-success gain_id" data-toggle="modal" data-target="#valider">Valider comme reçu</button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Data table area End-->
+<div class="modal" id="valider">
+        <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header flex-column">
+                <h4 class="modal-title w-100">Etes vous sure?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Voulez vous réelement effectuer cette action ? </p>
+                 <div id="confirm-result" class="valide"></div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger ok">Valider</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+   <script>
+        $(document).ready(function(){
+            let gain_id = "";
+
+            //lock or unlock
+            $('.gain_id').click(function(e){
+                gain_id = this.id;
+            });
+
+            $('#valider .ok').click(function(e){
+                e.preventDefault();
+                $.ajax({
+                    url : "/bonus/administration/valide/"+gain_id,
+                    type : "GET",
+                    success : function(data)
+                    {
+                        var html = "";
+                        html = '<div class="alert alert-success">' + data.success + '</div>';
+                        $('.valide').html(html);
+
+                        setTimeout(function(){
+                            location.reload()
+                        },3000)
+                    }
+                });
+            });
+         })
+   </script>
+@endsection
