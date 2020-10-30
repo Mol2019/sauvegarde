@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use App\Models\User;
 use App\Models\Service;
 use App\Models\Repertoire;
+use Auth;
 
 class UsersController extends Controller
 {
